@@ -1,0 +1,100 @@
+
+
+{include file="common/header"}
+
+
+  <div class="content content-nav-base commodity-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="{:url('index/index')}">首页</a>
+            <a href="{:url('all/index')}" >所有商品</a>
+            <a href="{:url('index/buytoday')}">今日团购</a>
+            <a href="{:url('news/index')}" class="active">零食资讯</a>
+            <a href="{:url('index/about')}">关于我们</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="commod-cont-wrap">
+      <div class="commod-cont w1200 layui-clear">
+        <div class="left-nav" style="width: 100px;">
+          <div class="list-boxs" style="width: 100px;">
+            <ul>
+              <a href="{:url('news/index')}"><li>全部</li></a>
+              {volist name="cate" id="vo"}
+              <a href="{:url('news/index',array('id'=>$vo.id))}"><li>{$vo.catename}</li></a>
+              {/volist}
+            </ul>
+          </div>
+        </div>
+        <div class="right-cont-wrap">
+          <div class="right-cont" style="background-color: #fff;min-height: 500px;height: auto;padding: 10px 25px 30px 25px;">
+            <div style="padding: 10px;text-align: center;color: #333">
+              <h2>{$news.title}</h2>
+            </div>
+            <div style="text-align: center;color: #bbb;padding: 0 0 20px 0;">
+              时间：{$news.putTime} &nbsp;栏目：{$news.catename}
+            </div>
+            <div>{$news.content}</div>
+          </div>
+          <div style="background-color: #fff;padding: 0px 15px 25px 35px;width: 1000px;color: #333;"><a href="{$news.url}" target="_blank">来源:{$news.source}</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+{include file="common/footer"}
+<script>
+
+  layui.config({
+    base: '__PUBLIC__static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','laypage','jquery'],function(){
+      var laypage = layui.laypage,$ = layui.$,
+     mm = layui.mm;
+       laypage.render({
+        elem: 'demo0'
+        ,count: 100 //数据总数
+      });
+
+
+    // 模版引擎导入
+    //  var html = demo.innerHTML;
+    //  var listCont = document.getElementById('list-cont');
+    //  // console.log(layui.router("#/about.html"))
+    // mm.request({
+    //     url: '../json/commodity.json',
+    //     success : function(res){
+    //       console.log(res)
+    //       listCont.innerHTML = mm.renderHtml(html,res)
+    //     },
+    //     error: function(res){
+    //       console.log(res);
+    //     }
+    //   })
+
+    $('.sort a').on('click',function(){
+      $(this).addClass('active').siblings().removeClass('active');
+    });
+    //初始化分类子列表隐藏
+    $('.list-box dt').addClass('active').siblings('dd').hide();
+    $('.list-box dt').attr('off',true);
+    //点击隐藏/开启分类列表
+    $('.list-box dt').on('click',function(){
+      if($(this).attr('off')){
+        $(this).removeClass('active').siblings('dd').show()
+        $(this).attr('off','')
+      }else{
+        $(this).addClass('active').siblings('dd').hide()
+        $(this).attr('off',true)
+      }
+    })
+
+});
+</script>
+
+
+</body>
+</html>

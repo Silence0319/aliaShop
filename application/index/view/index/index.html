@@ -1,0 +1,238 @@
+
+{include file="common/header"}
+
+
+  <div class="content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="{:url('index/index')}" class="active">首页</a>
+            <a href="{:url('all/index')}">所有商品</a>
+            <a href="{:url('index/buytoday')}">今日团购</a>
+            <a href="{:url('news/index')}">零食资讯</a>
+            <a href="{:url('index/about')}">关于我们</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="category-con">
+      <div class="category-banner" style="background-color: #fff;z-index: -1;">
+        <div class="w1200" style="padding: 10px 0;">
+          <!-- <img src="__PUBLIC__static/img/banner1.jpg"> -->
+          <div class="layui-carousel" id="test10">
+            <div carousel-item="">
+              {volist name="banner" id="vo"}
+              <div><a href="{:url('index/details',array('id'=>$vo.p_id))}"><img src="{$vo.pic}"></a></div>
+              {/volist}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="floors">
+      <div class="sk">
+        <div class="sk_inner w1200">
+          <div class="sk_hd">
+            <a href="javascript:;">
+              <img src="__PUBLIC__static/img/s_img1.jpg">
+            </a>
+          </div>
+          <div class="sk_bd">
+            <div class="layui-carousel" id="test1">
+              <div carousel-item>
+                <div class="item-box">
+                   {volist name="today1" id="vo"}
+                  <div class="item">
+                    <a href="{:url('index/details',array('id'=>$vo.id))}"><img src="{$vo.pic}"></a>
+                    <div class="title">{$vo.name}</div>
+                    <div class="price">
+                      <span>￥{$vo.realPrice}</span>
+                      <del>￥{$vo.price}</del>
+                    </div>
+                  </div>
+                   {/volist}
+                    
+                </div>
+                <div class="item-box">
+                  {volist name="today2" id="vo"}
+                  <div class="item">
+                    <a href="{:url('index/details',array('id'=>$vo.id))}"><img src="{$vo.pic}"></a>
+                    <div class="title">{$vo.name}</div>
+                    <div class="price">
+                      <span>￥{$vo.realPrice}</span>
+                      <del>￥{$vo.price}</del>
+                    </div>
+                  </div>
+                   {/volist}
+                   
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>    
+      </div>
+    </div>
+
+    <div class="product-list-box" id="product-list-box">
+      <div class="product-list-cont w1200">
+        <h4>促销大卖</h4>
+        <div class="product-item-box layui-clear">
+          {volist name="tui" id="vo"}
+          <div class="list-item">
+            <a href="{:url('index/details',array('id'=>$vo.id))}"><img src="{$vo.pic}" width="160" height="160"></a>
+            <p>{$vo.name}</p>
+            <span>￥{$vo.realPrice}</span>
+          </div>
+          {/volist}       
+        </div>
+      </div>
+    </div>
+    
+
+
+    <div class="product-cont w1200" id="product-cont">
+      <div class="product-item product-item1 layui-clear">
+        <div class="left-title">
+          <h4><i>1F</i></h4>
+          <img src="__PUBLIC__static/img/icon_gou.png">
+          <h5>饼干糕点</h5>
+        </div>
+        <div class="right-cont">
+          <!-- <a href="javascript:;" class="top-img"><img src="__PUBLIC__static/img/img12.jpg" alt=""></a> -->
+          <div class="img-box">
+          {volist name="bggd" id="vo"}            
+            <a href="{:url('index/details',array('id'=>$vo.id))}"><img src="{$vo.pic}"></a>
+          {/volist}
+            
+          </div>
+        </div>
+      </div>
+      <div class="product-item product-item2 layui-clear">
+        <div class="left-title">
+          <h4><i>2F</i></h4>
+          <img src="__PUBLIC__static/img/icon_gou.png">
+          <h5>坚果炒货</h5>
+        </div>
+        <div class="right-cont">
+         <!--  <a href="javascript:;" class="top-img"><img src="__PUBLIC__static/img/img12.jpg" alt=""></a> -->
+          <div class="img-box">
+                          
+          {volist name="jgch" id="vo"}            
+            <a href="{:url('index/details',array('id'=>$vo.id))}"><img src="{$vo.pic}"></a>
+          {/volist}       
+           
+          </div>
+        </div>
+      </div>
+      <div class="product-item product-item3 layui-clear">
+        <div class="left-title">
+          <h4><i>3F</i></h4>
+          <img src="__PUBLIC__static/img/icon_gou.png">
+          <h5>巧克力糖果</h5>
+        </div>
+        <div class="right-cont">
+          <!-- <a href="javascript:;" class="top-img"><img src="__PUBLIC__static/img/img12.jpg" alt=""></a> -->
+          <div class="img-box">
+            {volist name="qkltg" id="vo"}            
+              <a href="{:url('index/details',array('id'=>$vo.id))}"><img src="{$vo.pic}"></a>
+            {/volist} 
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-list-box" id="product-list-box">
+      <div class="product-list-cont w1200">
+        <h4>更多推荐</h4>
+        <div class="product-item-box layui-clear">
+          {volist name="more" id="vo"}
+          <div class="list-item">
+            <a href="{:url('index/details',array('id'=>$vo.id))}"><img src="{$vo.pic}" width="160" height="160"></a>
+            <p>{$vo.name}</p>
+            <span>￥{$vo.realPrice}</span>
+          </div>
+          {/volist}       
+        </div>
+      </div>
+    </div>
+  </div>
+
+{include file="common/footer"}
+  <script type="text/javascript">
+
+layui.config({
+    base: '__PUBLIC__static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','carousel'],function(){
+      var carousel = layui.carousel,
+     mm = layui.mm;
+     var option = {
+        elem: '#test1'
+        ,width: '100%' //设置容器宽度
+        ,arrow: 'always'
+        ,height:'298' 
+        ,indicator:'none'
+      }
+      carousel.render(option);
+      // 模版引擎导入
+     // var ins = carousel.render(option);
+     // var html = demo.innerHTML;
+     // var listCont = document.getElementById('list-cont');
+     // // console.log(layui.router("#/about.html"))
+     //  mm.request({
+     //    url: '../json/index.json',
+     //    success : function(res){
+     //      console.log(res)
+     //      listCont.innerHTML = mm.renderHtml(html,res)
+     //      ins.reload(option);
+     //    },
+     //    error: function(res){
+     //      console.log(res);
+     //    }
+     //  })
+});
+  //轮播图
+  layui.use(['carousel','form'],function(){
+    var carousel=layui.carousel
+    ,form=layui.form;
+    carousel.render({
+      elem:'#test10'
+      ,width:'1200px'
+      ,height:'400px'
+      ,interval:3500
+    });
+    //事件
+    carousel.on('change(test4)',function(res){
+      console.log(res)
+    });
+    var $=layui.$, active={
+      set:function(othis){
+        var THIS='layui-bg-normal'
+        ,key=othis.fata('key')
+        ,options={};
+
+        othis.css('background-color','#5EB878').siblings().removeAttr('style');
+        opyions[key]=othis.data('value');
+        ins3.reload(options);
+      }
+    };
+    //监听开关
+  form.on('switch(autoplay)', function(){
+    ins3.reload({
+      autoplay: this.checked
+    });
+  });
+  
+  $('.demoSet').on('keyup', function(){
+    var value = this.value
+    ,options = {};
+    if(!/^\d+$/.test(value)) return;
+    
+    options[this.name] = value;
+    ins3.reload(options);
+  });
+  });
+  </script>
+</body>
+</html>

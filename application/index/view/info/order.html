@@ -1,0 +1,282 @@
+
+
+{include file="common/header"}
+<style>
+.page {
+    text-align: center;
+}
+.page .pagination li.active span {
+    background: #009688;
+    color: #fff;
+    border: 1px solid #009688;
+}
+.page .pagination li {
+    display: inline-block;
+    margin-right: 5px;
+    text-align: center;
+}
+.page span {
+    display: inline-block;
+    padding: 5px;
+    min-width: 15px;
+    border: 1px solid #E2E2E2;
+}
+.page a {
+    display: inline-block;
+    background: #fff;
+    color: #888;
+    padding: 5px;
+    min-width: 15px;
+    border: 1px solid #E2E2E2;
+}
+</style>
+
+  <div class="content content-nav-base commodity-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="{:url('index/index')}">首页</a>
+            <a href="{:url('all/index')}">所有商品</a>
+            <a href="{:url('index/buytoday')}">今日团购</a>
+            <a href="{:url('news/index')}">零食资讯</a>
+            <a href="{:url('index/about')}">关于我们</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="commod-cont-wrap">
+      <div class="commod-cont w1200 layui-clear">
+        <div class="left-nav">
+          <div class="title">个人中心</div>
+          <div class="list-box">
+            
+            <ul>
+              <li><a href="{:url('info/index')}">个人信息</a></li>
+              <li><a href="{:url('info/order')}">我的订单</a></li>
+              <li><a href="{:url('info/collect')}">我的收藏</a></li>
+              <li><a href="{:url('info/address')}">收货地址</a></li>
+              <li><a href="{:url('info/password')}">修改密码</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="right-cont-wrap">
+          <div class="right-cont" style="background-color: #fff;min-height: 500px;height: auto;width: 850px;">
+            <!-- 订单 -->
+            <div>
+              <div class="layui-tab">
+                  <ul class="layui-tab-title">
+                    <li class="layui-this">未付订单</li>
+                    <li>历史订单</li>
+                  </ul>
+                  <div class="layui-tab-content">
+                    <!-- 未付款订单 -->
+                    <div class="layui-tab-item layui-show">
+                      <!-- 订单列表 -->
+                      <div style="border-left:1px solid #ececec;border-right:1px solid #ececec;width: 800px;margin-left: 10px;" class="cancelOrder">
+                        {volist name="nopay" id="vo" key="k"}
+                        <!-- 表头 -->
+                        <div style="background-color: #f5f5f5;padding: 5px 10px;height: 20px;">
+                          <div style="float: left;margin-left: 20px;">订单号：{$vo.number}</div>
+                          <div style="float: left;margin-left: 130px;">单价</div>
+                          <div style="float: left;margin-left: 90px;">数量</div>
+                          <div style="float: left;margin-left: 88px;">金额</div>
+                          <div style="float: left;margin-left: 90px;">
+                            <!-- <a href="{:url('index/account',array('id'=>$vo.id))}" title="结算">
+                              结算
+                            </a> -->
+                          </div>
+                          <div style="float: right;">
+                            <a href="javascript:;" title="删除订单" onclick="orderDel(this,'{$vo.id}')">
+                              <i class="layui-icon layui-icon-delete" style="font-size: 20px; color: #666;"></i>
+                            </a>
+                          </div>
+                        </div>
+                        <!-- 商品信息 -->
+                        {volist name="nopayShop" id="vs" key="k"}
+                        {if condition="$vo.id eq $vs.o_id"}
+                        <div style="padding: 10px;">
+                          <div style="float: left;">
+                            <div style="float: left;width: 110px;">
+                                <img src="{$vs.pic}" alt="" width="100" height="100">
+                            </div>
+                            <div style="float: left;width: 150px;line-height: 25px;margin-top: 30px;text-align: center;">
+                              <div>{$vs.pname}</div>
+                             <!--  <div>粉色 130cm</div> -->
+                            </div>
+                          </div>
+                          <div style="float: left;margin-top: 30px;margin-left: 20px;width: 55px">￥{$vs.realPrice}</div>
+                          <div style="float: left;margin-left: 76px;margin-top: 30px;width: 10px;">{$vs.num}</div>
+                          <div style="float: left;margin-left: 90px;margin-top: 30px;width: 15px;">￥{$vs.b_price}</div>
+                        </div>
+                        
+                        <div style="clear: both;height: 10px;"></div><hr>
+                        {/if}
+                        {/volist}
+                        <div style="width: 270px;float: right;">
+                          总计:￥{$vo.sumMoney}&nbsp;&nbsp;
+                          <span class="layui-btn layui-btn-sm" style="width: 68px" onclick="post(this,'{$vo.id}')">结算</span>
+                          <span class="layui-btn layui-btn-sm layui-btn-warm" onclick="cancel(this,'{$vo.id}')">取消订单</span>
+                        </div>
+                        <div style="clear: both;height: 10px;border-bottom: 1px solid #ccc;"></div>
+                      {/volist}
+                      
+                      </div>
+                      <!-- 分页 -->
+                      <div class="page">
+                        {$nopay->render()}
+                      </div>
+                    </div>
+                    <!-- 历史订单 -->
+                    <div class="layui-tab-item">
+                      <div style="border-left:1px solid #ececec;border-right:1px solid #ececec;width: 800px;margin-left: 10px;">
+                        {volist name="pay" id="vo" key="k"}
+                        <!-- 表头 -->
+                        <div style="background-color: #f5f5f5;padding: 5px 10px;height: 20px;">
+                          <div style="float: left;margin-left: 20px;">订单号：{$vo.number}</div>
+                          <div style="float: left;margin-left: 130px;">单价</div>
+                          <div style="float: left;margin-left: 90px;">数量</div>
+                          <div style="float: left;margin-left: 88px;">金额</div>
+                          <div style="float: left;margin-left: 20px;line-height: 20px;width: 150px;text-align: center;">
+                            {if condition="$vo.status eq 1"}
+                            已付款，待发货
+                            {elseif condition="$vo.status eq 0"/}
+                            未付款
+                            {elseif condition="$vo.status eq 3"/}
+                            取消订单
+                            {elseif condition="$vo.status eq 4"/}
+                            完成订单
+                            {elseif condition="$vo.status eq 5"/}
+                            已发货，待收货
+                            {/if}
+                          </div>
+                          <div style="float: right;">
+                            <a href="javascript:;" title="删除订单" onclick="orderDel(this,'{$vo.id}')">
+                              <i class="layui-icon layui-icon-delete" style="font-size: 20px; color: #666;"></i>
+                            </a>
+                          </div>
+                        </div>
+                        <!-- 商品信息 -->
+                        {volist name="shop" id="vs" key="k"}
+                        {if condition="$vo.id eq $vs.o_id"}
+                        <div style="padding: 10px;">
+                          <div style="float: left;">
+                            <div style="float: left;width: 110px;">
+                                <img src="{$vs.pic}" alt="" width="100" height="100">
+                            </div>
+                            <div style="float: left;width: 150px;line-height: 25px;margin-top: 30px;text-align: center;">
+                              <div>{$vs.pname}</div>
+                             <!--  <div>粉色 130cm</div> -->
+                            </div>
+                          </div>
+                          <div style="float: left;margin-top: 30px;margin-left: 20px;width: 55px">￥{$vs.realPrice}</div>
+                          <div style="float: left;margin-left: 76px;margin-top: 30px;width: 10px;">{$vs.num}</div>
+                          <div style="float: left;margin-left: 90px;margin-top: 30px;width: 15px;">￥{$vs.b_price}</div>
+                        </div>
+                        
+                        <div style="clear: both;height: 10px;"></div><hr>
+                        {/if}
+                        {/volist}
+                        <div style="float: left;padding: 0 0 0 40px;line-height: 40px">{$vo.orderTime}&nbsp;&nbsp;</div>
+                        <div style="width: 200px;float: right;">
+                          
+                          <b>总计:￥{$vo.sumMoney}</b>
+                          &nbsp;&nbsp;
+                          {if condition="$vo.status neq 5"}
+                          <span class="layui-btn layui-btn-sm" style="width: 68px;" onclick="confir(this,'{$vo.id}')">确认收货</span>
+                          {/if}
+                        </div>
+                        <div style="clear: both;height: 18px;border-bottom: 1px solid #ccc;"></div>
+                      {/volist}
+                      </div>  
+                      <!-- 分页 -->
+                      <div class="page">
+                        {$pay->render()}
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+              
+          
+             
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+{include file="common/footer"}
+<script>
+
+  layui.config({
+    base: '__PUBLIC__static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','laypage','jquery'],function(){
+      var laypage = layui.laypage,$ = layui.$,
+     mm = layui.mm;
+       laypage.render({
+        elem: 'demo0'
+        ,count: 100 //数据总数
+      });
+
+    $('.sort a').on('click',function(){
+      $(this).addClass('active').siblings().removeClass('active');
+    });
+    //初始化分类子列表隐藏
+    $('.list-box dt').addClass('active').siblings('dd').hide();
+    $('.list-box dt').attr('off',true);
+    //点击隐藏/开启分类列表
+    $('.list-box dt').on('click',function(){
+      if($(this).attr('off')){
+        $(this).removeClass('active').siblings('dd').show()
+        $(this).attr('off','')
+      }else{
+        $(this).addClass('active').siblings('dd').hide()
+        $(this).attr('off',true)
+      }
+    })
+
+});
+</script>
+<script src="__PUBLIC__static/js/jquery.js"></script>
+<script>
+  //删除订单
+  function orderDel(obj,id){
+    layer.confirm('确认要取消删除吗？',function(index){
+          //发异步删除数据
+          $.get("{:url('del/order')}",{id:id});
+          layer.msg('已删除!',{icon:1,time:1000},function(){
+            parent.location.reload();
+          });
+      });
+  }
+  //取消订单
+  function cancel(obj,id){
+    layer.confirm('确认要取消订单吗？',function(index){
+          //发异步数据
+          $.get("{:url('del/cancelOrder')}",{id:id});
+          layer.msg('已取消!',{icon:1,time:1000},function(){
+            parent.location.reload();
+          });
+      });
+  }
+  //结算
+  function post(obj,id){
+    window.location.href="{:url('index/account')}?id="+id;
+  }
+  //取消订单
+  function confir(obj,id){
+    layer.confirm('确认已收货？',function(index){
+          //发异步数据
+          $.get("{:url('add/confirmOrder')}",{id:id});
+          layer.msg('已确认!',{icon:1,time:1000},function(){
+            parent.location.reload();
+          });
+      });
+  }
+</script>
+
+
+</body>
+</html>

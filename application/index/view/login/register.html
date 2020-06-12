@@ -1,0 +1,121 @@
+
+{include file="common/header"}
+
+
+  <div class="content content-nav-base  login-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="{:url('index/index')}">首页</a>
+            <a href="{:url('all/index')}">所有商品</a>
+            <a href="{:url('index/buytoday')}">今日团购</a>
+            <a href="{:url('news/index')}">零食资讯</a>
+            <a href="{:url('index/about')}">关于我们</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="login-bg">
+      <div class="login-cont w1200">
+        <div class="form-box" style="width: 400px;">
+          <form class="layui-form" action="" id="formData">
+            <legend>会员注册</legend>
+            <div class="layui-form-item">
+              <label class="layui-form-label">会员名</label>
+              <div class="layui-input-block">
+                <input type="text" name="name" required  lay-verify="name" placeholder="请输入会员名" autocomplete="off" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">手机号</label>
+              <div class="layui-input-block">
+                <input type="tel" name="phone" required lay-verify="required|phone" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">登录密码</label>
+              <div class="layui-input-block">
+                <input type="password" name="password" required lay-verify="pass" id="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">确认密码</label>
+              <div class="layui-input-block">
+                <input type="password" name="truePWD" required lay-verify="repass" id="repass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item login-btn" style="margin-top: 25px;margin-bottom:35px;">
+              <div class="layui-input-block">
+                <button style="width: 360px;margin-right:0px;" class="layui-btn" lay-submit="" lay-filter="reg" onclick="return false">注册</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{include file="common/footer"}
+  <script type="text/javascript">
+   layui.config({
+      base: '__PUBLIC__static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['jquery','form','layer'],function(){
+          var $ = layui.$,form = layui.form, layer=layui.layer;
+
+          //自定义验证规则
+          form.verify({
+              name: function(value) {
+                  if (value.length < 2) {
+                      return '会员名至少得2个字符';
+                  }
+              },
+              pass: [/(.+){6,12}$/, '密码必须6到12位'],
+              repass: function(value) {
+                  if ($('#pass').val() != $('#repass').val()) {
+                      return '两次密码不一致';
+                  }
+              }
+          });
+          //监听提交
+          form.on('submit(reg)',
+          function(data){
+            console.log(data);
+            $.ajax({
+              type:"post",
+              url:"{:url('login/reg')}",
+              data:$("#formData").serialize(),
+              dataType:"json",
+              async:false,
+              success:function(res){
+                if(res.status==1){
+                  layer.msg(res.message,{
+                    icon:6,
+                    time:1000
+                  },
+                  function(){
+                    window.location.href="{:url('login/index')}";
+                  });
+                }else{
+                  layer.msg(res.message,{
+                    icon:5
+                  },
+                  function(){
+                    layer.reload();
+                  });
+                }
+              },
+              error:function(res){
+                layer.msg('发送请求失败！');
+              }
+            });
+            return false;
+          });
+
+         
+         
+    });
+  </script>
+
+</body>
+</html>

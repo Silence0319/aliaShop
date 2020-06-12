@@ -1,0 +1,85 @@
+{include file="common/header"}
+</head>
+    
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <div class="layui-card-body ">
+                            <table class="layui-table layui-form">
+                                <thead>
+                                    <tr>
+                                         
+                                        <th>商品名称</th>
+                                        <th>图片</th>
+                                        <th>数量</th>
+                                        <th>单品价格</th>
+                                        <th>总计</th>
+                                         
+                                         
+                                </thead>
+                                <tbody>
+                                    {volist name="product" id="vo"}
+                                    <tr>
+                                       
+                                        <td>{$vo.pname}</td>
+                                        <td><img src="{$vo.pic}" alt="" width="100" height="100"></td>
+                                        <td>{$vo.num}</td>
+                                        <td>{$vo.realPrice}</td>
+                                    
+                                        <td>{$vo.b_price}</td> 
+                                        
+                                      
+                                    </tr>
+                                    {/volist}
+                                </tbody>
+                            </table>
+                        </div>
+            </div>
+        </div>
+        <script>layui.use(['form', 'layer'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+
+                //监听提交
+                form.on('submit(save)',
+                function(data) {
+                    console.log(data);
+                    //发异步，把数据提交给php
+                    $.ajax({
+                        type: "POST",
+                        url: "{:url('edit/passAdmin')}",
+                        data: $("#formData").serialize(),
+                        dataType:'json',
+                        async:false,
+                        success:function(res){
+                            if(res.status == 1){
+                                layer.alert(res.message,{icon:6},function(){
+                                     // 获得frame索引
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    //关闭当前frame
+                                    parent.layer.close(index);
+                                });
+                            }else{
+                                layer.alert(res.message,{icon:5},function(){
+                                     // 获得frame索引
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    //关闭当前frame
+                                    parent.layer.close(index);
+                                });
+                            }
+                        },
+                        error:function(res){
+                            layer.alert('发送请求失败！');
+                        }
+                    });
+                     
+                    return false;
+                });
+
+            });</script>
+      
+    </body>
+
+</html>

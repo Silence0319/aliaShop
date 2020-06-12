@@ -1,0 +1,344 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:82:"D:\phpstudy_pro\WWW\www.alia.com\public/../application/index\view\index\index.html";i:1588577083;s:84:"D:\phpstudy_pro\WWW\www.alia.com\public/../application/index\view\common\header.html";i:1589248378;s:84:"D:\phpstudy_pro\WWW\www.alia.com\public/../application/index\view\common\footer.html";i:1584860727;}*/ ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alia零食商城</title>
+  <link rel="stylesheet" type="text/css" href="__PUBLIC__static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="__PUBLIC__layui/css/layui.css">
+  <script type="text/javascript" src="__PUBLIC__layui/layui.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body id="list-cont">
+  <div class="site-nav-bg">
+    <div class="site-nav w1200">
+      <p class="sn-back-home">
+        <i class="layui-icon layui-icon-home"></i>
+        <a href="<?php echo url('index/index'); ?>">首页</a>
+      </p>
+      <div class="sn-quick-menu">
+        <?php if(\think\Request::instance()->session('uid') != null): ?>
+        <div class="login"><a href="<?php echo url('info/index'); ?>"><?php echo \think\Request::instance()->session('user_info.name'); ?>！</a></div>
+        <div class="login"><a href="javascript:;" id="logout">注销</a></div>
+        <div class="sp-cart"><a href="<?php echo url('info/shopcart'); ?>">购物车</a><span id="carNum"><?php echo $carNum; ?></span></div>
+        <?php else: ?>
+        <div class="login"><a href="<?php echo url('login/index'); ?>">登录</a></div>
+        <div class="sp-cart"><a href="<?php echo url('login/register'); ?>">注册</a></div>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+
+  <div class="header">
+    <div class="headerLayout w1200">
+      <div class="headerCon">
+        <h1 class="mallLogo">
+          <a href="<?php echo url('index/index'); ?>" title="零食商城">
+            <img src="__PUBLIC__static/img/logo.png">
+          </a>
+        </h1>
+        <div class="mallSearch">
+          <form action="<?php echo url('all/search'); ?>" class="layui-form" novalidate>
+            <input type="text" name="keyword" required  lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入需要的商品">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+            <!-- <input type="hidden" name="" value=""> -->
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+ <script type="text/javascript">
+   layui.config({
+      base: '__PUBLIC__static/js/util' //你存放新模块的目录，注意，不是layui的模块目录
+    }).use(['jquery','form'],function(){
+          var $ = layui.$,form = layui.form;
+
+    $("#logout").on('click',function(){
+    $.ajax({
+      type:'post',
+      url:"<?php echo url('login/logout'); ?>",
+      dataType:"json",
+      success:function(res){
+        if(res.status==1){
+          //alert(res.message);
+          layer.msg(res.message);
+          setTimeout(function(){
+            window.location.href="<?php echo url('login/index'); ?>";
+          },1000);
+        }else{
+          //alert(res.message);
+          layer.msg(res.message);
+        }
+      },
+      error:function(res){
+        layer.msg('发送请求失败！');
+      }
+    });
+  });
+  });
+  </script>
+
+
+  <div class="content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="<?php echo url('index/index'); ?>" class="active">首页</a>
+            <a href="<?php echo url('all/index'); ?>">所有商品</a>
+            <a href="<?php echo url('index/buytoday'); ?>">今日团购</a>
+            <a href="<?php echo url('news/index'); ?>">零食资讯</a>
+            <a href="<?php echo url('index/about'); ?>">关于我们</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="category-con">
+      <div class="category-banner" style="background-color: #fff;z-index: -1;">
+        <div class="w1200" style="padding: 10px 0;">
+          <!-- <img src="__PUBLIC__static/img/banner1.jpg"> -->
+          <div class="layui-carousel" id="test10">
+            <div carousel-item="">
+              <?php if(is_array($banner) || $banner instanceof \think\Collection || $banner instanceof \think\Paginator): $i = 0; $__LIST__ = $banner;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+              <div><a href="<?php echo url('index/details',array('id'=>$vo['p_id'])); ?>"><img src="<?php echo $vo['pic']; ?>"></a></div>
+              <?php endforeach; endif; else: echo "" ;endif; ?>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="floors">
+      <div class="sk">
+        <div class="sk_inner w1200">
+          <div class="sk_hd">
+            <a href="javascript:;">
+              <img src="__PUBLIC__static/img/s_img1.jpg">
+            </a>
+          </div>
+          <div class="sk_bd">
+            <div class="layui-carousel" id="test1">
+              <div carousel-item>
+                <div class="item-box">
+                   <?php if(is_array($today1) || $today1 instanceof \think\Collection || $today1 instanceof \think\Paginator): $i = 0; $__LIST__ = $today1;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+                  <div class="item">
+                    <a href="<?php echo url('index/details',array('id'=>$vo['id'])); ?>"><img src="<?php echo $vo['pic']; ?>"></a>
+                    <div class="title"><?php echo $vo['name']; ?></div>
+                    <div class="price">
+                      <span>￥<?php echo $vo['realPrice']; ?></span>
+                      <del>￥<?php echo $vo['price']; ?></del>
+                    </div>
+                  </div>
+                   <?php endforeach; endif; else: echo "" ;endif; ?>
+                    
+                </div>
+                <div class="item-box">
+                  <?php if(is_array($today2) || $today2 instanceof \think\Collection || $today2 instanceof \think\Paginator): $i = 0; $__LIST__ = $today2;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+                  <div class="item">
+                    <a href="<?php echo url('index/details',array('id'=>$vo['id'])); ?>"><img src="<?php echo $vo['pic']; ?>"></a>
+                    <div class="title"><?php echo $vo['name']; ?></div>
+                    <div class="price">
+                      <span>￥<?php echo $vo['realPrice']; ?></span>
+                      <del>￥<?php echo $vo['price']; ?></del>
+                    </div>
+                  </div>
+                   <?php endforeach; endif; else: echo "" ;endif; ?>
+                   
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>    
+      </div>
+    </div>
+
+    <div class="product-list-box" id="product-list-box">
+      <div class="product-list-cont w1200">
+        <h4>促销大卖</h4>
+        <div class="product-item-box layui-clear">
+          <?php if(is_array($tui) || $tui instanceof \think\Collection || $tui instanceof \think\Paginator): $i = 0; $__LIST__ = $tui;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+          <div class="list-item">
+            <a href="<?php echo url('index/details',array('id'=>$vo['id'])); ?>"><img src="<?php echo $vo['pic']; ?>" width="160" height="160"></a>
+            <p><?php echo $vo['name']; ?></p>
+            <span>￥<?php echo $vo['realPrice']; ?></span>
+          </div>
+          <?php endforeach; endif; else: echo "" ;endif; ?>       
+        </div>
+      </div>
+    </div>
+    
+
+
+    <div class="product-cont w1200" id="product-cont">
+      <div class="product-item product-item1 layui-clear">
+        <div class="left-title">
+          <h4><i>1F</i></h4>
+          <img src="__PUBLIC__static/img/icon_gou.png">
+          <h5>饼干糕点</h5>
+        </div>
+        <div class="right-cont">
+          <!-- <a href="javascript:;" class="top-img"><img src="__PUBLIC__static/img/img12.jpg" alt=""></a> -->
+          <div class="img-box">
+          <?php if(is_array($bggd) || $bggd instanceof \think\Collection || $bggd instanceof \think\Paginator): $i = 0; $__LIST__ = $bggd;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>            
+            <a href="<?php echo url('index/details',array('id'=>$vo['id'])); ?>"><img src="<?php echo $vo['pic']; ?>"></a>
+          <?php endforeach; endif; else: echo "" ;endif; ?>
+            
+          </div>
+        </div>
+      </div>
+      <div class="product-item product-item2 layui-clear">
+        <div class="left-title">
+          <h4><i>2F</i></h4>
+          <img src="__PUBLIC__static/img/icon_gou.png">
+          <h5>坚果炒货</h5>
+        </div>
+        <div class="right-cont">
+         <!--  <a href="javascript:;" class="top-img"><img src="__PUBLIC__static/img/img12.jpg" alt=""></a> -->
+          <div class="img-box">
+                          
+          <?php if(is_array($jgch) || $jgch instanceof \think\Collection || $jgch instanceof \think\Paginator): $i = 0; $__LIST__ = $jgch;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>            
+            <a href="<?php echo url('index/details',array('id'=>$vo['id'])); ?>"><img src="<?php echo $vo['pic']; ?>"></a>
+          <?php endforeach; endif; else: echo "" ;endif; ?>       
+           
+          </div>
+        </div>
+      </div>
+      <div class="product-item product-item3 layui-clear">
+        <div class="left-title">
+          <h4><i>3F</i></h4>
+          <img src="__PUBLIC__static/img/icon_gou.png">
+          <h5>巧克力糖果</h5>
+        </div>
+        <div class="right-cont">
+          <!-- <a href="javascript:;" class="top-img"><img src="__PUBLIC__static/img/img12.jpg" alt=""></a> -->
+          <div class="img-box">
+            <?php if(is_array($qkltg) || $qkltg instanceof \think\Collection || $qkltg instanceof \think\Paginator): $i = 0; $__LIST__ = $qkltg;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>            
+              <a href="<?php echo url('index/details',array('id'=>$vo['id'])); ?>"><img src="<?php echo $vo['pic']; ?>"></a>
+            <?php endforeach; endif; else: echo "" ;endif; ?> 
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-list-box" id="product-list-box">
+      <div class="product-list-cont w1200">
+        <h4>更多推荐</h4>
+        <div class="product-item-box layui-clear">
+          <?php if(is_array($more) || $more instanceof \think\Collection || $more instanceof \think\Paginator): $i = 0; $__LIST__ = $more;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+          <div class="list-item">
+            <a href="<?php echo url('index/details',array('id'=>$vo['id'])); ?>"><img src="<?php echo $vo['pic']; ?>" width="160" height="160"></a>
+            <p><?php echo $vo['name']; ?></p>
+            <span>￥<?php echo $vo['realPrice']; ?></span>
+          </div>
+          <?php endforeach; endif; else: echo "" ;endif; ?>       
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="ng-promise-box">
+      <div class="ng-promise w1200">
+        <p class="text">
+          <a class="icon1" href="javascript:;">7天无理由退换货</a>
+          <a class="icon2" href="javascript:;">满99元全场免邮</a>
+          <a class="icon3" style="margin-right: 0" href="javascript:;">100%品质保证</a>
+        </p>
+      </div>
+    </div>
+    <div class="mod_help w1200">                                     
+      <p>
+        <a href="<?php echo url('index/about'); ?>">关于我们</a>
+        <span>|</span>
+        <a href="javascript:;">帮助中心</a>
+        <span>|</span>
+        <a href="javascript:;">售后服务</a>
+        <span>|</span>
+        <a href="<?php echo url('index/information'); ?>">零食资讯</a>
+        <span>|</span>
+        <a href="<?php echo url('index/index'); ?>">关于货源</a>
+      </p>
+      <p class="coty">零食商城版权所有 &copy;豫ICP备19042362号-1 2019-2020 <br>豫公网安备 31010602002343号</p>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+
+layui.config({
+    base: '__PUBLIC__static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','carousel'],function(){
+      var carousel = layui.carousel,
+     mm = layui.mm;
+     var option = {
+        elem: '#test1'
+        ,width: '100%' //设置容器宽度
+        ,arrow: 'always'
+        ,height:'298' 
+        ,indicator:'none'
+      }
+      carousel.render(option);
+      // 模版引擎导入
+     // var ins = carousel.render(option);
+     // var html = demo.innerHTML;
+     // var listCont = document.getElementById('list-cont');
+     // // console.log(layui.router("#/about.html"))
+     //  mm.request({
+     //    url: '../json/index.json',
+     //    success : function(res){
+     //      console.log(res)
+     //      listCont.innerHTML = mm.renderHtml(html,res)
+     //      ins.reload(option);
+     //    },
+     //    error: function(res){
+     //      console.log(res);
+     //    }
+     //  })
+});
+  //轮播图
+  layui.use(['carousel','form'],function(){
+    var carousel=layui.carousel
+    ,form=layui.form;
+    carousel.render({
+      elem:'#test10'
+      ,width:'1200px'
+      ,height:'400px'
+      ,interval:3500
+    });
+    //事件
+    carousel.on('change(test4)',function(res){
+      console.log(res)
+    });
+    var $=layui.$, active={
+      set:function(othis){
+        var THIS='layui-bg-normal'
+        ,key=othis.fata('key')
+        ,options={};
+
+        othis.css('background-color','#5EB878').siblings().removeAttr('style');
+        opyions[key]=othis.data('value');
+        ins3.reload(options);
+      }
+    };
+    //监听开关
+  form.on('switch(autoplay)', function(){
+    ins3.reload({
+      autoplay: this.checked
+    });
+  });
+  
+  $('.demoSet').on('keyup', function(){
+    var value = this.value
+    ,options = {};
+    if(!/^\d+$/.test(value)) return;
+    
+    options[this.name] = value;
+    ins3.reload(options);
+  });
+  });
+  </script>
+</body>
+</html>

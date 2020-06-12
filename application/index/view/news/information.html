@@ -1,0 +1,110 @@
+
+
+{include file="common/header"}
+
+
+  <div class="content content-nav-base commodity-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="{:url('index/index')}">首页</a>
+            <a href="{:url('all/index')}" >所有商品</a>
+            <a href="{:url('index/buytoday')}">今日团购</a>
+            <a href="{:url('news/index')}" class="active">零食资讯</a>
+            <a href="{:url('index/about')}">关于我们</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="commod-cont-wrap">
+      <div class="commod-cont w1200 layui-clear">
+        <div class="left-nav" style="width: 100px;">
+          <div class="list-boxs" style="width: 100px;">
+            <ul>
+              <a href="{:url('news/index')}"><li>全部</li></a>
+              {volist name="cate" id="vo"}
+              <a href="{:url('news/news',array('id'=>$vo.id))}"><li>{$vo.catename}</li></a>
+              {/volist}
+            </ul>
+          </div>
+        </div>
+        <div class="right-cont-wrap">
+          <div class="right-cont" style="background-color: #fff;min-height: 500px;height: auto;padding: 10px 25px 30px 25px;">
+            {volist name="news" id="vo"}
+            <div class="news-box">
+              <div class="newstitle"><a href="{:url('news/newsinfo',array('id'=>$vo.id))}" class="news-title">{$vo.title}</a></div>
+              <div class="news-content" style="display:block;word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height: 40px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-box-clamp:3;overflow:hidden;max-width: 1000px">
+                <a href="{:url('news/newsinfo',array('id'=>$vo.id))}">{$vo.content}
+                </a>
+              </div>
+              <div class="news-info">
+                <div class="left">作者：{$vo.source}</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="center">时间：{$vo.putTime}</div>
+                <div class="right">
+                  <a href="{$vo.url}">
+                    <i class="layui-icon layui-icon-website" style="font-size: 10px; "></i> 来源
+                  </a>
+                </div>
+              </div>
+            </div>
+            {/volist}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+{include file="common/footer"}
+<script>
+
+  layui.config({
+    base: '__PUBLIC__static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','laypage','jquery'],function(){
+      var laypage = layui.laypage,$ = layui.$,
+     mm = layui.mm;
+       laypage.render({
+        elem: 'demo0'
+        ,count: 100 //数据总数
+      });
+
+
+    // 模版引擎导入
+    //  var html = demo.innerHTML;
+    //  var listCont = document.getElementById('list-cont');
+    //  // console.log(layui.router("#/about.html"))
+    // mm.request({
+    //     url: '../json/commodity.json',
+    //     success : function(res){
+    //       console.log(res)
+    //       listCont.innerHTML = mm.renderHtml(html,res)
+    //     },
+    //     error: function(res){
+    //       console.log(res);
+    //     }
+    //   })
+
+    $('.sort a').on('click',function(){
+      $(this).addClass('active').siblings().removeClass('active');
+    });
+    //初始化分类子列表隐藏
+    $('.list-box dt').addClass('active').siblings('dd').hide();
+    $('.list-box dt').attr('off',true);
+    //点击隐藏/开启分类列表
+    $('.list-box dt').on('click',function(){
+      if($(this).attr('off')){
+        $(this).removeClass('active').siblings('dd').show()
+        $(this).attr('off','')
+      }else{
+        $(this).addClass('active').siblings('dd').hide()
+        $(this).attr('off',true)
+      }
+    })
+
+});
+</script>
+
+
+</body>
+</html>

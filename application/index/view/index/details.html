@@ -1,0 +1,212 @@
+
+{include file="common/header"}
+
+  <div class="content content-nav-base datails-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="{:url('index/index')}">首页</a>
+            <a href="{:url('all/index')}">所有商品</a>
+            <a href="{:url('index/buytoday')}">今日团购</a>
+            <a href="{:url('news/index')}">零食资讯</a>
+            <a href="{:url('index/about')}">关于我们</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="data-cont-wrap w1200">
+      <div class="crumb">
+        <a href="{:url('index/index')}">首页</a>
+        <span>></span>
+        <a href="{:url('all/index')}">所有商品</a>
+        <span>></span>
+        <a href="javascript:;">产品详情</a>
+      </div>
+      <div class="product-intro layui-clear">
+        <div class="preview-wrap">
+          <a href="javascript:;"><img src="{$product.pic}" width="400" height="400"></a>
+        </div>
+        <div class="itemInfo-wrap">
+          <div class="itemInfo">
+            <div class="title">
+              <h4>{$product.name} </h4>
+              <!-- 根据用户id判断是否收藏 以及颜色更改-->
+              <a href="javascript:void(0);" id="collect">
+                {if condition="$collect.status eq 1"}
+                <span id="text"><i class="layui-icon layui-icon-rate-solid"></i>已收藏</span>
+                {elseif condition="$collect.status eq 0"}
+                <span id="text"><i class="layui-icon layui-icon-rate-solid" style="color: #ccc;"></i>收藏</span>
+                {/if}
+                <input type="hidden" name="pid" id="pid" value="{$product.id}">
+              </a>
+            </div>
+            <div class="summary">
+              <p class="reference"><span>参考价</span> <del>￥{$product.price}</del></p>
+              <p class="activity">
+                <span>活动价</span>
+                <strong class="price">
+                  <i>￥</i>{$product.realPrice}
+                </strong>
+                {if condition="$product.type eq 1"}
+                <span style="background-color: #fc9;padding: 2px 5px;color: #fff;margin-left: 9px">团购</span>
+                {/if}
+              </p>
+              <p class="address-box">
+                <span>送&nbsp;&nbsp;&nbsp;&nbsp;至</span>
+                <strong class="address">河南&nbsp;&nbsp;驻马店&nbsp;&nbsp;上蔡县</strong>
+              </p>
+            </div>
+            <div class="choose-attrs">
+              <div class="color layui-clear">
+                <span class="title">类&nbsp;&nbsp;&nbsp;&nbsp;型</span> 
+                <div class="color-cont">
+                  <span class="btn">{$product.catename}</span>
+                </div>
+              </div>
+              <div class="number layui-clear">
+                <span class="title">数&nbsp;&nbsp;&nbsp;&nbsp;量</span>
+                <div class="number-cont">
+                  <span class="cut btn">-</span>
+                  <input maxlength="4" type="" name="" value="1" id="goodNum">
+                    <span class="add btn">+</span>
+                  </div>
+                </div>
+            </div>
+            <div class="choose-btns">
+              <button class="layui-btn layui-btn-primary purchase-btn" id="buyNow">立刻购买</button>
+              <button class="layui-btn  layui-btn-danger car-btn" id="car"><i class="layui-icon layui-icon-cart-simple"></i>加入购物车</button>  
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="layui-clear">
+        <div class="aside">
+          <h4>热销推荐</h4>
+          <div class="item-list">
+            {volist name="hot" id="vo"}
+            <div class="item">
+              <a href="{:url('index/details',array('id'=>$vo.id))}">
+                <img src="{$vo.pic}" width="280" height="280">
+                <p><span>{$vo.name}</span><span class="pric">￥{$vo.realPrice}</span></p>
+              </a>
+            </div>
+           {/volist} 
+          </div>
+        </div>
+        <div class="detail">
+          <h4>详情</h4>
+          <div class="item" style="">
+            <img src="{$product.details}" width="800">
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+{include file="common/footer"}
+<script type="text/javascript">
+  layui.config({
+    base: '__PUBLIC__static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','jquery'],function(){
+      var mm = layui.mm,$ = layui.$;
+      var cur = $('.number-cont input').val();
+      $('.number-cont .btn').on('click',function(){
+        if($(this).hasClass('add')){
+          cur++;
+        }else{
+          if(cur > 1){
+            cur--;
+          }  
+        }
+        $('.number-cont input').val(cur);
+        console.log($('.number-cont input').val());
+        //商品数量
+        var goodNum=$('.number-cont input').val();
+      });
+      //商品ID
+      var pid=$("#pid").val();
+      //商品价格
+      var b_price="{$product.realPrice}";
+      $("#car").click(function(){
+        var num=$('.number-cont input').val();
+        console.log(num);
+          $.ajax({
+          type:"post",
+          url:"{:url('add/car')}",
+          data:{pid: pid,goodNum: num},
+          dataType:"json",
+          async:false,
+          success:function(res){
+            if(res.status==1){
+              layer.msg(res.message,{icon:6,time:1000},function(){
+                $("#carNum").html(res.carNum);
+              });
+            }else{
+              layer.msg(res.message,{icon:5,time:1000});
+            }
+          },
+          error:function(res){
+            layer.msg('发送请求失败！');
+          }
+        });
+      });
+      $("#buyNow").click(function(){
+        var num=$('.number-cont input').val();
+        console.log(num);
+          $.ajax({
+          type:"post",
+          url:"{:url('add/buyNow')}",
+          data:{pid: pid,goodNum: num},
+          dataType:"json",
+          async:false,
+          success:function(res){
+            if(res.status==1){
+              window.location.href="/public/index/info/orderlist?id="+res.oid;
+            }else if(res.status==2){
+              layer.msg(res.message,{icon:5,time:1000});
+            }
+          },
+          error:function(res){
+            layer.msg('发送请求失败！');
+          }
+        });
+      });
+
+      //收藏
+      $("#collect").on('click',function(){
+        //alert('调用成功');
+        $.ajax({
+          type:"post",
+          url:"{:url('add/collect')}",
+          data:{pid:pid},
+          dataType:"json",
+          success:function(res){
+            if(res.status==1){
+              layer.msg(res.message,{icon:6,time:1000},function(){
+                $("#text").html('<i class="layui-icon layui-icon-rate-solid"></i>已收藏');
+              });
+            }else if(res.status==2){
+              layer.msg(res.message,{icon:6,time:1000},function(){
+                $("#text").html('<i class="layui-icon layui-icon-rate-solid" style="color: #ccc;"></i>收藏');
+              });
+            }else{
+              layer.msg(res.message,{icon:5,time:1000});
+            }
+          },
+          error:function(res){
+            layer.msg('发送请求失败！');
+          }
+        });
+      });
+
+      
+      
+  });
+</script>
+
+
+</body>
+</html>

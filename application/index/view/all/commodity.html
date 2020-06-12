@@ -1,0 +1,300 @@
+
+
+{include file="common/header"}
+
+  <div class="content content-nav-base commodity-content">
+    <div class="main-nav">
+      <div class="inner-cont0">
+        <div class="inner-cont1 w1200">
+          <div class="inner-cont2">
+            <a href="{:url('index/index')}">首页</a>
+            <a href="{:url('all/index')}"  class="active">所有商品</a>
+            <a href="{:url('index/buytoday')}">今日团购</a>
+            <a href="{:url('news/index')}">零食资讯</a>
+            <a href="{:url('index/about')}">关于我们</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="commod-cont-wrap">
+      <div class="commod-cont w1200 layui-clear">
+        <div class="left-nav">
+          <div class="title">所有分类</div>
+          <div class="list-box">
+            {volist name="onelevel" id="vo" key="k"}
+            <dl>
+             <dt>{$vo.catename}</dt>
+             {volist name="twolevel" id="vs" key="k"}
+             {if condition="$vo.id eq $vs['tid']"}
+             <dd><a href="javascript:;" onclick="window.location.href='{:url('all/son',array('id'=>$vs.id))}'">{$vs.catename}</a></dd>
+             {/if}
+             {/volist}
+            </dl>
+            {/volist}
+           
+          </div>
+        </div>
+        <div class="right-cont-wrap">
+          <div class="right-cont">
+            <div class="sort layui-clear">
+              <a class="active" href="javascript:;" event = 'volume' id="volume">销量</a>
+              <a href="javascript:;" event = 'price' id="price">价格</a>
+              <a href="javascript:;" event = 'newprod' id="newprod">新品</a>
+              <a href="javascript:;" event = 'collection' id="collection">收藏</a>
+            </div>
+            <div class="prod-number">
+              <!-- 商品个数统计 js控制-->
+              <span id="num">{$discussionNum}个</span>
+            </div>
+            <!-- 商品展示区 -->
+            <div class="cont-list layui-clear" id="list-conts"></div>
+            <!-- 分页 -->
+            <div id="disscussionListPage" style="text-align: center;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+{include file="common/footer"}
+<script>
+
+  layui.config({
+    base: '__PUBLIC__static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','laypage','jquery','layer','laytpl'],function(){
+      var laypage = layui.laypage,$ = layui.$,laytpl=layui.laytpl,
+      mm = layui.mm;
+
+$(document).ready(function(){
+  $("#price").click(function(){
+    //按价钱
+    function list(start,size){
+        $.ajax({
+            type:"post",
+            url:"{:url('all/dataPrice')}",
+            data:{start: start,size: size,subject_chapter_no: "{$discussionNum}"},
+            timeout:10000,
+            error:function (){
+                alert('发送请求超时，请稍后重试');
+                //console.log("请求失败");
+            },
+            success:function(result){
+                $("#list-conts").empty();
+                $.each(result.data,function (index,value) {
+                    $("#list-conts").append(
+                        '<div class="item"><div class="img"><a href="/public/index/index/details?id='+value.id+'">' +
+                            '<img src="' +value.pic+'" width="280" height="280"></a></div><div class="text"><p class="title">'+value.name+'</p><p class="price"><span class="pri">￥'+value.realPrice+'</span><span class="nub">'+value.saleNum+'付款</span></p></div></div>'
+                    );
+                });
+            }
+        });
+    }
+    var pageSize = 9;  //每页显示的条数
+    var discussionNum = '{$discussionNum}'; //数据总数
+    //layui分页样式
+    layui.use(['laypage', 'layer'], function(){
+    var laypage = layui.laypage
+    ,layer = layui.layer;
+    //总页数大于页码总数
+    laypage.render({
+        elem: 'disscussionListPage'//标签ID
+        ,limit: pageSize  //每页显示的条数
+        ,count: discussionNum //数据总数
+        ,jump: function(obj){
+            //console.log(obj.curr);
+            list(obj.curr,pageSize); //通过obj.curr传递当前页
+        }
+      });
+    });
+  });
+  $("#volume").click(function(){
+    //按销量
+    function list(start,size){
+        $.ajax({
+            type:"post",
+            url:"{:url('all/data')}",
+            data:{start: start,size: size,subject_chapter_no: "{$discussionNum}"},
+            timeout:10000,
+            error:function (){
+                alert('发送请求超时，请稍后重试');
+                //console.log("请求失败");
+            },
+            success:function(result){
+                $("#list-conts").empty();
+                $.each(result.data,function (index,value) {
+                    $("#list-conts").append(
+                        '<div class="item"><div class="img"><a href="/public/index/index/details?id='+value.id+'">' +
+                            '<img src="' +value.pic+'" width="280" height="280"></a></div><div class="text"><p class="title">'+value.name+'</p><p class="price"><span class="pri">￥'+value.realPrice+'</span><span class="nub">'+value.saleNum+'付款</span></p></div></div>'
+                    );
+                });
+            }
+        });
+    }
+    var pageSize = 9;  //每页显示的条数
+    var discussionNum = '{$discussionNum}'; //数据总数
+    //layui分页样式
+    layui.use(['laypage', 'layer'], function(){
+    var laypage = layui.laypage
+    ,layer = layui.layer;
+    //总页数大于页码总数
+    laypage.render({
+        elem: 'disscussionListPage'//标签ID
+        ,limit: pageSize  //每页显示的条数
+        ,count: discussionNum //数据总数
+        ,jump: function(obj){
+            //console.log(obj.curr);
+            list(obj.curr,pageSize); //通过obj.curr传递当前页
+        }
+      });
+    });
+  });
+  $("#newprod").click(function(){
+    //按新品
+    function list(start,size){
+        $.ajax({
+            type:"post",
+            url:"{:url('all/dataNewprod')}",
+            data:{start: start,size: size,subject_chapter_no: "{$discussionNum}"},
+            timeout:10000,
+            error:function (){
+                alert('发送请求超时，请稍后重试');
+                //console.log("请求失败");
+            },
+            success:function(result){
+                $("#list-conts").empty();
+                $.each(result.data,function (index,value) {
+                    $("#list-conts").append(
+                        '<div class="item"><div class="img"><a href="/public/index/index/details?id='+value.id+'">' +
+                            '<img src="' +value.pic+'" width="280" height="280"></a></div><div class="text"><p class="title">'+value.name+'</p><p class="price"><span class="pri">￥'+value.realPrice+'</span><span class="nub">'+value.saleNum+'付款</span></p></div></div>'
+                    );
+                });
+            }
+        });
+    }
+    var pageSize = 9;  //每页显示的条数
+    var discussionNum = '{$discussionNum}'; //数据总数
+    //layui分页样式
+    layui.use(['laypage', 'layer'], function(){
+    var laypage = layui.laypage
+    ,layer = layui.layer;
+    //总页数大于页码总数
+    laypage.render({
+        elem: 'disscussionListPage'//标签ID
+        ,limit: pageSize  //每页显示的条数
+        ,count: discussionNum //数据总数
+        ,jump: function(obj){
+            //console.log(obj.curr);
+            list(obj.curr,pageSize); //通过obj.curr传递当前页
+        }
+      });
+    });
+  });
+  $("#collection").click(function(){
+    //收藏量
+    function list(start,size){
+        $.ajax({
+            type:"post",
+            url:"{:url('all/dataCollection')}",
+            data:{start: start,size: size,subject_chapter_no: "{$discussionNum}"},
+            timeout:10000,
+            error:function (){
+                alert('发送请求超时，请稍后重试');
+                //console.log("请求失败");
+            },
+            success:function(result){
+                $("#list-conts").empty();
+                $.each(result.data,function (index,value) {
+                    $("#list-conts").append(
+                        '<div class="item"><div class="img"><a href="/public/index/index/details?id='+value.id+'">' +
+                            '<img src="' +value.pic+'" width="280" height="280"></a></div><div class="text"><p class="title">'+value.name+'</p><p class="price"><span class="pri">￥'+value.realPrice+'</span><span class="nub">'+value.saleNum+'付款</span></p></div></div>'
+                    );
+                });
+            }
+        });
+    }
+    var pageSize = 9;  //每页显示的条数
+    var discussionNum = '{$discussionNum}'; //数据总数
+    //layui分页样式
+    layui.use(['laypage', 'layer'], function(){
+    var laypage = layui.laypage
+    ,layer = layui.layer;
+    //总页数大于页码总数
+    laypage.render({
+        elem: 'disscussionListPage'//标签ID
+        ,limit: pageSize  //每页显示的条数
+        ,count: discussionNum //数据总数
+        ,jump: function(obj){
+            //console.log(obj.curr);
+            list(obj.curr,pageSize); //通过obj.curr传递当前页
+        }
+      });
+    });
+  });
+});
+//初始化
+function list(start,size){
+        $.ajax({
+            type:"post",
+            url:"{:url('all/data')}",
+            data:{start: start,size: size,subject_chapter_no: "{$discussionNum}"},
+            timeout:10000,
+            error:function (){
+                alert('发送请求超时，请稍后重试');
+                //console.log("请求失败");
+            },
+            success:function(result){
+                $("#list-conts").empty();
+                $.each(result.data,function (index,value) {
+                    $("#list-conts").append(
+                        '<div class="item"><div class="img"><a href="/public/index/index/details?id='+value.id+'">' +
+                            '<img src="' +value.pic+'" width="280" height="280"></a></div><div class="text"><p class="title">'+value.name+'</p><p class="price"><span class="pri">￥'+value.realPrice+'</span><span class="nub">'+value.saleNum+'付款</span></p></div></div>'
+                    );
+                });
+            }
+        });
+    }
+
+var pageSize = 9;  //每页显示的条数
+var discussionNum = '{$discussionNum}'; //数据总数
+ 
+//layui分页样式
+layui.use(['laypage', 'layer'], function(){
+    var laypage = layui.laypage
+    ,layer = layui.layer;
+    //总页数大于页码总数
+    laypage.render({
+        elem: 'disscussionListPage'//标签ID
+        ,limit: pageSize  //每页显示的条数
+        ,count: discussionNum //数据总数
+        ,jump: function(obj){
+            //console.log(obj.curr);
+            list(obj.curr,pageSize); //通过obj.curr传递当前页
+        }
+    });
+});
+
+
+    //列表功能
+    $('.sort a').on('click',function(){
+      $(this).addClass('active').siblings().removeClass('active');
+    });
+    //初始化分类子列表隐藏
+    $('.list-box dt').addClass('active').siblings('dd').hide();
+    $('.list-box dt').attr('off',true);
+    //点击隐藏/开启分类列表
+    $('.list-box dt').on('click',function(){
+      if($(this).attr('off')){
+        $(this).removeClass('active').siblings('dd').show()
+        $(this).attr('off','')
+      }else{
+        $(this).addClass('active').siblings('dd').hide()
+        $(this).attr('off',true)
+      }
+    })
+
+});
+</script>
+
+
+</body>
+</html>

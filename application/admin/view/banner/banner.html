@@ -1,0 +1,80 @@
+{include file="common/header"}
+    </head>
+    <body>
+        <div class="x-nav">
+          <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">演示</a>
+            <a>
+              <cite>导航元素</cite></a>
+          </span>
+          <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+            <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                       <div class="layui-card-body"></div>
+                        <div class="layui-card-header">
+                           
+                            <button class="layui-btn" onclick="xadmin.open('添加用户','{:url('banner/add')}',800,600)"><i class="layui-icon"></i>添加</button>
+                        </div>
+                        <div class="layui-card-body ">
+                          <div class="layui-carousel" id="test10" style="margin:auto;">
+                            <div carousel-item="">
+                              {volist name="banner" id="vo"}
+                              <div><img src="{$vo.pic}"></div>
+                              {/volist}
+                            </div>
+                          </div> 
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </body>
+<script>
+   //轮播图
+  layui.use(['carousel','form'],function(){
+    var carousel=layui.carousel
+    ,form=layui.form;
+    carousel.render({
+      elem:'#test10'
+      ,width:'1200px'
+      ,height:'400px'
+      ,interval:3500
+    });
+    //事件
+    carousel.on('change(test4)',function(res){
+      console.log(res)
+    });
+    var $=layui.$, active={
+      set:function(othis){
+        var THIS='layui-bg-normal'
+        ,key=othis.fata('key')
+        ,options={};
+
+        othis.css('background-color','#5EB878').siblings().removeAttr('style');
+        opyions[key]=othis.data('value');
+        ins3.reload(options);
+      }
+    };
+    //监听开关
+  form.on('switch(autoplay)', function(){
+    ins3.reload({
+      autoplay: this.checked
+    });
+  });
+  
+  $('.demoSet').on('keyup', function(){
+    var value = this.value
+    ,options = {};
+    if(!/^\d+$/.test(value)) return;
+    
+    options[this.name] = value;
+    ins3.reload(options);
+  });
+  });
+</script>
+</html>

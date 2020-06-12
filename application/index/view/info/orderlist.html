@@ -1,0 +1,159 @@
+
+{include file="common/header"}
+
+
+  <div class="content content-nav-base shopcart-content">
+   
+     <!-- 隐藏订单表id -->
+     <input type="hidden" name="orderID" value="{$id}" id="orderID">
+    <div class="cart w1200" style="margin-top: 30px;">
+    {volist name="order" id="vo" key="k"}
+      <div class="cart-table-th">
+        <div class="th th-chk">
+          <div class="select-all">
+            <div class="cart-checkbox">
+              <input class="check-all check" id="allCheckked" type="checkbox" value="true">
+            </div>
+          <label>&nbsp;&nbsp;</label>
+          </div>
+        </div>
+        <div class="th th-item">
+          <div class="th-inner">
+            订单号：{$vo.number}
+          </div>
+        </div>
+        <div class="th th-price">
+          <div class="th-inner">
+            单价
+          </div>
+        </div>
+        <div class="th th-amount">
+          <div class="th-inner">
+            时间：{$vo.orderTime}
+          </div>
+        </div>
+        <div class="th th-sum">
+          <div class="th-inner">
+            总计：￥{$vo.sumMoney}
+          </div>
+        </div>
+        <div class="th th-op">
+          <div class="th-inner">
+            <input type="hidden" name="oid" class="oid" value="{$vo.id}">
+            <a href="javascript:;" id="del">删除</a>
+          </div>
+        </div>  
+      </div>
+      {volist name="booking" id="vs" key="k"}
+      {if condition="$vo.id eq $vs.o_id"}
+      <div class="OrderList" style="border-bottom: 1px solid #f5f5f5;">
+        <div class="order-content" id="list-cont">
+          
+          <ul class="item-content layui-clear">
+            <li class="th th-chk">
+              <div class="select-all">
+                <div class="cart-checkbox">
+
+                </div>
+              </div>
+            </li>
+            <li class="th th-item">
+              <div class="item-cont">
+                <a href="javascript:;"><img src="{$vs.pic}" alt=""></a>
+                <div class="text">
+                  <div class="title">{$vs.pname}</div>
+                  <p><span>订单号</span>  <span>130</span>cm</p>
+                </div>
+              </div>
+            </li>
+            <li class="th th-price">
+              <span class="th-su">￥{$vs.realPrice}</span>
+            </li>
+            <li class="th th-amount">
+              <div class="box-btn layui-clear">
+                <div class="less layui-btn">-</div>
+                <input class="Quantity-input" type="" name="" value="{$vs.num}" disabled="disabled">
+                <div class="add layui-btn">+</div>
+              </div>
+            </li>
+            <li class="th th-sum">
+              <span class="sum">￥{$vs.b_price}</span>
+            </li>
+
+          </ul>
+           
+        </div>
+      </div>
+      {/if}
+      {/volist}
+    {/volist}
+    <div style="padding: 20px 0px 0 0;width: 300px;float:right;">
+      <button class="layui-btn" id="pay">去结算</button>
+      <button class="layui-btn layui-btn-warm" id="cancel">取消订单</button>
+    </div>
+    </div>
+
+  </div>
+  
+{include file="common/footer"}
+<script type="text/javascript">
+  layui.config({
+    base: '__PUBLIC__static/js/util/' //你存放新模块的目录，注意，不是layui的模块目录
+  }).use(['mm','jquery','element','car','layer'],function(){
+    var mm = layui.mm,$ = layui.$,element = layui.element,car = layui.car;
+    var layer=layui.layer;
+    //删除
+    $("#del").on('click',function(){
+      var oid=$(".oid").val();
+      //console.log(oid);
+      //传入后台
+      $.ajax({
+        type:"post",
+        url:"{:url('del/order')}",
+        data:{id:oid},
+        dataType:"json",
+        success:function(res){
+          console.log(oid);
+          if(res.status==1){
+            layer.msg(res.message,{icon:6},function(){
+              window.location.reload();
+            });
+          }
+        },
+        error:function(res){
+          console.log('发送请求失败！');
+          layer.msg('发送请求失败！');
+        }
+      });
+    });
+    //结算
+    $("#pay").on('click',function(){
+      var orderID=$("#orderID").val();
+      window.location.href="/public/index/index/account?id="+orderID;
+    });
+    //取消订单
+    $("#cancel").on('click',function(){
+      var orderID=$("#orderID").val();
+      $.ajax({
+        type:"post",
+        url:"{:url('del/cancelOrder')}",
+        data:{id:orderID},
+        dataType:"json",
+        success:function(res){
+          if(res.status==1){
+            layer.msg(res.message,{icon:6,time:1000},function(){
+              window.location.href="{:url('index/index')}";
+            });
+          }else{
+            layer.msg(res.message,{icon:5,time});
+          }
+        },
+        error:function(res){
+          layer.msg('发送请求失败！');
+        }
+      });
+    });
+});
+</script>
+</body>
+</html>
